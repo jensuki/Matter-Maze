@@ -8,8 +8,8 @@ const {
     Events
 } = Matter;
 
-const cellsHorizontal = 15; // # of columns
-const cellsVertical = 15; // # of rows
+const cellsHorizontal = 5; // # of columns
+const cellsVertical = 5; // # of rows
 
 // score container + dynamic screen dimensions
 const uiBarHeight = 50;
@@ -213,7 +213,7 @@ const setupCollision = () => {
     Events.on(engine, 'collisionStart', (event) => {
         event.pairs.forEach(({ bodyA, bodyB }) => {
             const labels = ['ball', 'goal'];
-            if (labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
+            if (labels.includes(bodyA.label) && labels.includes(bodyB.label)) {
                 // goal!
                 world.gravity.y = .8;
                 world.bodies.forEach(body => {
