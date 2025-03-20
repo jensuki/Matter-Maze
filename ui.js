@@ -1,23 +1,23 @@
 import { Timer } from './timer.js';
-const { Body } = Matter;
-import { ball } from './maze.js';
+const { Body, Engine } = Matter;
+import { ball, engine } from './maze.js';
 
 const initGame = () => {
     const startBtn = document.querySelector('.start-btn');
 
     startBtn.addEventListener('click', () => {
         startBtn.classList.add('hidden');
-
         Timer.start();
 
-        // reset any velocity captured before click event
-        Body.setVelocity(ball, { x: 0, y: 0 });
-        // enable movement as soon as timer starts
+        // ✅ Wake up the ball before allowing movement
+        Body.setVelocity(ball, { x: 0, y: 0 }); // Tiny movement to trigger physics update
+        Engine.update(engine); // Force an immediate physics update
+
+        // ✅ Enable movement after ensuring collision detection is active
         Body.setStatic(ball, false);
-        // startBtn.remove();
     });
 
-    // load new game to browser dimensions
+    // Reload game on window resize
     window.addEventListener('resize', () => location.reload());
 };
 

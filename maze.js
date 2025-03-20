@@ -182,7 +182,7 @@ const initBall = () => {
         unitLengthX / 2 - buffer, unitLengthY / 2 - buffer, ballRadius, {
         label: 'ball',
         isStatic: true,
-        restitution: 0.1,
+        restitution: 0,
         render: {
             sprite: {
                 texture: 'assets/maze_sphere.png',
@@ -237,4 +237,4 @@ const setupCollision = () => {
 }
 
 
-export { ball, initMaze, initBall, setupCollision };
+export { ball, engine, initMaze, initBall, setupCollision };
