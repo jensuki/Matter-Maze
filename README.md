@@ -1,7 +1,9 @@
 # Matter Maze 🌀
 A responsive maze game built with [Matter.js](https://brm.io/matter-js/)
 
-![Matter Maze Gameplay](assets/matter_maze.gif)
+<p align="center">
+  <img src="assets/matter_maze.gif" width="400">
+</p>
 
 ## About
 **Matter Maze** is a dynamic and responsive game built using Matter.js, a 2D physics engine. The game challenges players to navigate **randomly generated maze paths** while keeping track of their best completion time**
