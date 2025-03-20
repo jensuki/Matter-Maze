@@ -1,3 +1,6 @@
+import { Timer } from './timer.js';
+import { showWinMsg } from './ui.js';
+
 const {
     Engine,
     Render,
@@ -8,8 +11,8 @@ const {
     Events
 } = Matter;
 
-const cellsHorizontal = 5; // # of columns
-const cellsVertical = 5; // # of rows
+const cellsHorizontal = 15; // # of columns
+const cellsVertical = 15; // # of rows
 
 // score container + dynamic screen dimensions
 const uiBarHeight = 50;
@@ -123,10 +126,7 @@ stepThroughCell(startRow, startCol); // start maze generation
  * - draw vertical + horizontal walls on the canvas based on maze data
  */
 
-
 const initMaze = () => {
-
-
 
     // draw horizontal walls
     horizontals.forEach((row, rowIndex) => {
@@ -180,6 +180,8 @@ const initBall = () => {
     ball = Bodies.circle(
         unitLengthX / 2, unitLengthY / 2, ballRadius, {
         label: 'ball',
+        isStatic: true,
+        restitution: 0.1,
         render: {
             sprite: {
                 texture: 'assets/maze_sphere.png',
@@ -196,7 +198,7 @@ document.addEventListener('keydown', (e) => {
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
         e.preventDefault(); // prevent page scrolling
     }
-    const maxSpeed = 5;
+    const maxSpeed = 3.5;
     let velocity = { x: 0, y: 0 };
 
     if (e.code === 'ArrowUp') velocity = { x: 0, y: -maxSpeed };
@@ -209,6 +211,8 @@ document.addEventListener('keydown', (e) => {
 
 // handle collision events (for winning condition)
 
+let gameOver = false;
+
 const setupCollision = () => {
     Events.on(engine, 'collisionStart', (event) => {
         event.pairs.forEach(({ bodyA, bodyB }) => {
@@ -216,6 +220,12 @@ const setupCollision = () => {
             if (labels.includes(bodyA.label) && labels.includes(bodyB.label)) {
                 // goal!
                 world.gravity.y = .8;
+                if (gameOver) return;
+                gameOver = true;
+
+                // stop timer
+                const timeTaken = Timer.stop();
+                showWinMsg(timeTaken)
                 world.bodies.forEach(body => {
                     if (body.label === 'wall') Body.setStatic(body, false);
                 })
@@ -225,4 +235,4 @@ const setupCollision = () => {
 }
 
 
-export { initMaze, initBall, setupCollision };
+export { ball, initMaze, initBall, setupCollision };

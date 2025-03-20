@@ -9,7 +9,7 @@ const Timer = {
     formatTime(totalSeconds) {
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
-        return `Time ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     },
 
     // start game timer
@@ -19,7 +19,7 @@ const Timer = {
         // func to update the timer display
         const updateTimer = () => {
             const timeElapsed = Math.floor((Date.now() - this.startTime) / 1000);
-            document.querySelector('.timer').textContent = this.formatTime(timeElapsed);
+            document.querySelector('.timer').textContent = `Time: ${this.formatTime(timeElapsed)}`;
         };
 
         // call timer immediately
@@ -34,7 +34,7 @@ const Timer = {
 
         // now calculate time taken for current game
         const timeTaken = Math.floor((Date.now() - this.startTime) / 1000);
-        document.querySelector('.timer').textContent = this.formatTime(timeTaken);
+        document.querySelector('.timer').textContent = `Time: ${this.formatTime(timeTaken)}`;
 
         // check if no best time exists or new time is best
         if (!this.bestTime || timeTaken < this.bestTime) {
@@ -44,7 +44,7 @@ const Timer = {
         }
 
         // update score to new best time
-        document.querySelector('.best-time').textContent = this.formatTime(this.bestTime);
+        document.querySelector('.best-time').textContent = `Best: ${this.formatTime(this.bestTime)}`;
 
         // return timeTaken to use it for displaying during a win
         return timeTaken;
@@ -52,7 +52,7 @@ const Timer = {
 
     // display best time when game loads
     initDisplay() {
-        document.querySelector('.best-time').textContent = this.bestTime ? `Best: ${this.formatTime(bestTime)}` : `Best: --`;
+        document.querySelector('.best-time').textContent = this.bestTime ? `Best: ${this.formatTime(this.bestTime)}` : `Best: --`;
     }
 
 }
