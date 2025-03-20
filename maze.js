@@ -174,11 +174,12 @@ const initMaze = () => {
 // ball (player) setup
 const ballRadius = Math.min(unitLengthX, unitLengthY) / 3;
 const ballSize = 276;
+const buffer = 2;
 let ball;
 
 const initBall = () => {
     ball = Bodies.circle(
-        unitLengthX / 2, unitLengthY / 2, ballRadius, {
+        unitLengthX / 2 - buffer, unitLengthY / 2 - buffer, ballRadius, {
         label: 'ball',
         isStatic: true,
         restitution: 0.1,
@@ -217,6 +218,7 @@ const setupCollision = () => {
     Events.on(engine, 'collisionStart', (event) => {
         event.pairs.forEach(({ bodyA, bodyB }) => {
             const labels = ['ball', 'goal'];
+            console.log(event)
             if (labels.includes(bodyA.label) && labels.includes(bodyB.label)) {
                 // goal!
                 world.gravity.y = .8;
