@@ -11,7 +11,7 @@ const {
     Events
 } = Matter;
 
-const cellsHorizontal = 15; // # of columns
+const cellsHorizontal = 20; // # of columns
 const cellsVertical = 15; // # of rows
 
 // score container + dynamic screen dimensions
@@ -37,7 +37,8 @@ const render = Render.create({
     options: {
         wireframes: false,
         width, // width of canvas
-        height // height of canvas
+        height, // height of canvas
+
     }
 });
 
@@ -137,7 +138,10 @@ const initMaze = () => {
                     rowIndex * unitLengthY + unitLengthY, // bottom y coordinate
                     unitLengthX, 5, {
                     label: 'wall',
-                    isStatic: true
+                    isStatic: true,
+                    render: {
+                        fillStyle: '#37374F'
+                    }
                 }
                 ));
             }
@@ -153,7 +157,10 @@ const initMaze = () => {
                     rowIndex * unitLengthY + unitLengthY / 2, // middle of y coordinate
                     5, unitLengthY, {
                     label: 'wall',
-                    isStatic: true
+                    isStatic: true,
+                    render: {
+                        fillStyle: '#37374F'
+                    }
                 }
                 ));
             }
@@ -166,7 +173,10 @@ const initMaze = () => {
         height - unitLengthY / 2,
         unitLengthX * .7, unitLengthY * .7, {
         label: 'goal',
-        isStatic: true
+        isStatic: true,
+        render: {
+            fillStyle: '#37374F'
+        }
     }
     ));
 };
@@ -199,7 +209,7 @@ document.addEventListener('keydown', (e) => {
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
         e.preventDefault(); // prevent page scrolling
     }
-    const maxSpeed = 3.5;
+    const maxSpeed = 4.5;
     let velocity = { x: 0, y: 0 };
 
     if (e.code === 'ArrowUp') velocity = { x: 0, y: -maxSpeed };
@@ -218,7 +228,6 @@ const setupCollision = () => {
     Events.on(engine, 'collisionStart', (event) => {
         event.pairs.forEach(({ bodyA, bodyB }) => {
             const labels = ['ball', 'goal'];
-            console.log(event)
             if (labels.includes(bodyA.label) && labels.includes(bodyB.label)) {
                 // goal!
                 world.gravity.y = .8;

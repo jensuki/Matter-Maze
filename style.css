@@ -21,11 +21,12 @@ h1 {
 .winner {
     display: flex;
     flex-direction: column;
+    flex-grow: .4;
     justify-content: center;
     align-items: center;
     position: absolute;
     z-index: 1;
-    height: 100vh;
+    height: 80vh;
     width: 100vw;
     gap: 20px;
 }
@@ -43,7 +44,7 @@ h1 {
 .top-ui {
     width: 100%;
     height: 50px;
-    background: rgb(26, 25, 33);
+    background: #1a1a1e;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,4 +77,17 @@ button:hover {
 
 button:active {
     box-shadow: inset 1px 1px 5px rgba(255, 192, 203, 0.5);
+}
+
+.game-instructions {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 15px 15px;
+    border-radius: 5px;
+    text-align: center;
+    opacity: 0.9;
 }

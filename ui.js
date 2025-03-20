@@ -2,22 +2,37 @@ import { Timer } from './timer.js';
 const { Body, Engine } = Matter;
 import { ball, engine } from './maze.js';
 
+const showInstructions = () => {
+    // only display instructions if users first time playing
+    if (!localStorage.getItem('hasPlayed')) {
+        const instructions = document.createElement('p');
+        instructions.classList.add('game-instructions');
+        instructions.textContent = 'Use arrow keys to move';
+        document.body.appendChild(instructions);
+
+        setTimeout(() => {
+            instructions.remove();
+            localStorage.setItem('hasPlayed', 'true');
+        }, 1500);
+    }
+}
+
 const initGame = () => {
     const startBtn = document.querySelector('.start-btn');
+
+    showInstructions();
 
     startBtn.addEventListener('click', () => {
         startBtn.classList.add('hidden');
         Timer.start();
 
-        // ✅ Wake up the ball before allowing movement
-        Body.setVelocity(ball, { x: 0, y: 0 }); // Tiny movement to trigger physics update
-        Engine.update(engine); // Force an immediate physics update
+        Body.setVelocity(ball, { x: 0, y: 0 });
+        Engine.update(engine); // force an immediate physics update
 
-        // ✅ Enable movement after ensuring collision detection is active
+        // enable movement after ensuring collision detection is active
         Body.setStatic(ball, false);
     });
 
-    // Reload game on window resize
     window.addEventListener('resize', () => location.reload());
 };
 
