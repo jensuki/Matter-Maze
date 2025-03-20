@@ -32,6 +32,7 @@ const render = Render.create({
     element: document.body, // attach canvas to body
     engine: engine, // connect engine to the renderer
     options: {
+        wireframes: false,
         width, // width of canvas
         height // height of canvas
     }
@@ -161,20 +162,40 @@ const initMaze = () => {
     ));
 };
 
-// ball setup
+// ball (player) setup
 const ballRadius = Math.min(unitLengthX, unitLengthY) / 3;
 const ballSize = 276;
+let ball;
 
 const initBall = () => {
-    const ball = Bodies.circle(
+    ball = Bodies.circle(
         unitLengthX / 2, unitLengthY / 2, ballRadius, {
         render: {
             sprite: {
-                texture: 'assets/maze_sphere.png'
+                texture: 'assets/maze_sphere.png',
+                xScale: (ballRadius * 2) / ballSize,
+                yScale: (ballRadius * 2) / ballSize
             }
         }
-    }
-    )
+    });
+    World.add(world, ball);
 }
 
-export { initMaze };
+// handle ball movement
+document.addEventListener('keydown', (e) => {
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) {
+        e.preventDefault(); // prevent page scrolling
+    }
+    const maxSpeed = 5;
+    let velocity = { x: 0, y: 0 };
+
+    if (e.code === 'ArrowUp') velocity = { x: 0, y: -maxSpeed };
+    if (e.code === 'ArrowRight') velocity = { x: maxSpeed, y: 0 };
+    if (e.code === 'ArrowDown') velocity = { x: 0, y: maxSpeed };
+    if (e.code === 'ArrowLeft') velocity = { x: -maxSpeed, y: 0 };
+
+    Body.setVelocity(ball, velocity);
+})
+
+
+export { initMaze, initBall };
