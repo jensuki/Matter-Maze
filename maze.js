@@ -130,6 +130,7 @@ const initMaze = () => {
                     (columnIndex * unitLengthX) + (unitLengthX / 2), // center x coordinate
                     rowIndex * unitLengthY + unitLengthY, // bottom y coordinate
                     unitLengthX, 5, {
+                    label: 'wall',
                     isStatic: true
                 }
                 ));
@@ -145,6 +146,7 @@ const initMaze = () => {
                     columnIndex * unitLengthX + unitLengthX, // right side of current cell (x coordinate)
                     (rowIndex * unitLengthY) + unitLengthY / 2, // middle of y coordinate
                     5, unitLengthY, {
+                    label: 'wall',
                     isStatic: true
                 }
                 ));
@@ -157,6 +159,7 @@ const initMaze = () => {
         width - unitLengthX / 2,
         height - unitLengthY / 2,
         unitLengthX * .7, unitLengthY * .7, {
+        label: 'goal',
         isStatic: true
     }
     ));
@@ -170,6 +173,8 @@ let ball;
 const initBall = () => {
     ball = Bodies.circle(
         unitLengthX / 2, unitLengthY / 2, ballRadius, {
+        label: 'ball',
+        isStatic: true,
         render: {
             sprite: {
                 texture: 'assets/maze_sphere.png',
@@ -195,7 +200,17 @@ document.addEventListener('keydown', (e) => {
     if (e.code === 'ArrowLeft') velocity = { x: -maxSpeed, y: 0 };
 
     Body.setVelocity(ball, velocity);
-})
+});
 
+// handle collision events (for winning condition)
+
+const setupCollision = () => {
+    Events.on(engine, 'collisionStart', (event) => {
+        event.pairs.forEach(({ bodyA, bodyB }) => {
+            console.log(bodyA, bodyB, event)
+        })
+    })
+}
+setupCollision();
 
 export { initMaze, initBall };
