@@ -8,8 +8,8 @@ const {
     Events
 } = Matter;
 
-const cellsHorizontal = 5; // # of columns
-const cellsVertical = 5; // # of rows
+const cellsHorizontal = 15; // # of columns
+const cellsVertical = 15; // # of rows
 
 // score container + dynamic screen dimensions
 const uiBarHeight = 50;
@@ -73,6 +73,11 @@ const shuffle = arr => {
  * - randomly selected neighboring cell
  * - removes walls between visited cells
  */
+
+// random starting cell row and column
+const startRow = Math.floor(Math.random() * cellsVertical);
+const startCol = Math.floor(Math.random() * cellsHorizontal);
+
 const stepThroughCell = (row, column) => {
 
     // if current cell already visited, stop and mark as visited
@@ -108,26 +113,27 @@ const stepThroughCell = (row, column) => {
     };
 };
 
+
+stepThroughCell(startRow, startCol); // start maze generation
+
+
 /**
  * intialize and build the maze structure
  * - recursively call stepThroughCell() to generate maze
  * - draw vertical + horizontal walls on the canvas based on maze data
  */
 
+
 const initMaze = () => {
 
-    // random starting cell row and column
-    const startRow = Math.floor(Math.random() * cellsVertical);
-    const startCol = Math.floor(Math.random() * cellsHorizontal);
 
-    stepThroughCell(startRow, startCol); // start maze generation
 
     // draw horizontal walls
     horizontals.forEach((row, rowIndex) => {
-        row.forEach((openColumn, columnIndex) => {
-            if (!openColumn) { // if path between rows is blocked(false), add a horizontal wall
+        row.forEach((open, columnIndex) => {
+            if (!open) { // if path is blocked(false), create wall
                 World.add(world, Bodies.rectangle(
-                    (columnIndex * unitLengthX) + (unitLengthX / 2), // center x coordinate
+                    columnIndex * unitLengthX + unitLengthX / 2, // center x coordinate
                     rowIndex * unitLengthY + unitLengthY, // bottom y coordinate
                     unitLengthX, 5, {
                     label: 'wall',
@@ -139,18 +145,18 @@ const initMaze = () => {
     });
 
     // draw vertical walls
-    verticals.forEach((column, columnIndex) => {
-        column.forEach((openRow, rowIndex) => {
-            if (!openRow) { // if path between columns is blocked(false), add a wall
+    verticals.forEach((row, rowIndex) => {
+        row.forEach((open, columnIndex) => {
+            if (!open) { // if path is blocked(false), create wall
                 World.add(world, Bodies.rectangle(
                     columnIndex * unitLengthX + unitLengthX, // right side of current cell (x coordinate)
-                    (rowIndex * unitLengthY) + unitLengthY / 2, // middle of y coordinate
+                    rowIndex * unitLengthY + unitLengthY / 2, // middle of y coordinate
                     5, unitLengthY, {
                     label: 'wall',
                     isStatic: true
                 }
                 ));
-            };
+            }
         });
     });
 
@@ -174,7 +180,6 @@ const initBall = () => {
     ball = Bodies.circle(
         unitLengthX / 2, unitLengthY / 2, ballRadius, {
         label: 'ball',
-        isStatic: true,
         render: {
             sprite: {
                 texture: 'assets/maze_sphere.png',
@@ -207,10 +212,17 @@ document.addEventListener('keydown', (e) => {
 const setupCollision = () => {
     Events.on(engine, 'collisionStart', (event) => {
         event.pairs.forEach(({ bodyA, bodyB }) => {
-            console.log(bodyA, bodyB, event)
+            const labels = ['ball', 'goal'];
+            if (labels.includes(collision.bodyA.label) && labels.includes(collision.bodyB.label)) {
+                // goal!
+                world.gravity.y = .8;
+                world.bodies.forEach(body => {
+                    if (body.label === 'wall') Body.setStatic(body, false);
+                })
+            }
         })
     })
 }
-setupCollision();
 
-export { initMaze, initBall };
+
+export { initMaze, initBall, setupCollision };
